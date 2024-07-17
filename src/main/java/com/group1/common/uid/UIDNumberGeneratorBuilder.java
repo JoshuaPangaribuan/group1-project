@@ -1,4 +1,4 @@
-package com.group1.payment_gateway.common.uid;
+package com.group1.common.uid;
 
 class UIDNumberGenerator<T extends Number> implements IUIDGenerator<T> {
     private int length;
