@@ -6,7 +6,7 @@ import java.util.Scanner;
 import com.group1.app.menu.enums.MenuNavigation;
 import com.group1.common.exception.NormalExitException;
 
-public class BankMenu implements Menu {
+public final class BankMenu implements Menu {
     private Scanner scan;
     private boolean runningState = true;
     private boolean optionState = true;

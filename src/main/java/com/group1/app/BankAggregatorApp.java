@@ -13,6 +13,8 @@ import com.group1.app.menu.Menu;
 import com.group1.app.menu.NasabahMenu;
 import com.group1.app.menu.SimulationMenu;
 import com.group1.app.menu.enums.MenuNavigation;
+import com.group1.app.repository.InMemoryRepository;
+import com.group1.app.repository.Repository;
 import com.group1.common.exception.NormalExitException;
 
 public class BankAggregatorApp implements Application {
@@ -25,37 +27,37 @@ public class BankAggregatorApp implements Application {
         }));
 
         try {
-            blockingState(new Supplier<Exception>() {
-                @Override
-                public Exception get() {
-                    try {
-                        // Initiate input from console
-                        Scanner scan = new Scanner(System.in);
-                        registerClosable(scan);
+            blockingState(() -> {{
+                        try {
+                            // Initiate input from console
+                            Scanner scan = new Scanner(System.in);
+                            registerClosable(scan);
 
-                        // Initiate repository
-                        // BankAggregatorRepository repo = new H2BankAggregatorRepository();
-                        // registerClosable(repo);
+                            // Initiate repository
+                            Repository repo = new InMemoryRepository();
+                            registerClosable(repo);
 
-                        SimulationMenu simulationMenu = new SimulationMenu(scan);
-                        NasabahMenu nasabahMenu = new NasabahMenu(scan);
-                        BankMenu bankMenu = new BankMenu(scan);
+                            SimulationMenu simulationMenu = new SimulationMenu(scan);
+                            NasabahMenu nasabahMenu = new NasabahMenu(scan);
+                            BankMenu bankMenu = new BankMenu(scan);
 
-                        Map<MenuNavigation, Menu> menuList = new HashMap<>();
-                        menuList.put(MenuNavigation.SIMULATION_MENU, simulationMenu);
-                        menuList.put(MenuNavigation.NASABAH_MENU, nasabahMenu);
-                        menuList.put(MenuNavigation.BANK_MENU, bankMenu);
+                            Map<MenuNavigation, Menu> menuList = new HashMap<>();
+                            menuList.put(MenuNavigation.SIMULATION_MENU, simulationMenu);
+                            menuList.put(MenuNavigation.NASABAH_MENU, nasabahMenu);
+                            menuList.put(MenuNavigation.BANK_MENU, bankMenu);
 
-                        simulationMenu.setMenuList(menuList);
-                        nasabahMenu.setMenuList(menuList);
-                        bankMenu.setMenuList(menuList);
+                            simulationMenu.setMenuList(menuList);
+                            nasabahMenu.setMenuList(menuList);
+                            bankMenu.setMenuList(menuList);
 
-                        throw simulationMenu.execute();
-                    } catch (Exception e) {
-                        return e instanceof NormalExitException ? (NormalExitException) e : e;
+                            throw simulationMenu.execute();
+                        } catch (Exception e) {
+                            return e instanceof NormalExitException ? (NormalExitException) e : e;
+                        }
                     }
                 }
-            });
+            );
+            
         } catch (NormalExitException e) {
             System.out.println("\nNORMAL EXIT: " + e.getMessage());
         } catch (Exception e) {
@@ -93,5 +95,4 @@ public class BankAggregatorApp implements Application {
         BankAggregatorApp app = new BankAggregatorApp();
         return app;
     }
-
 }

@@ -7,7 +7,7 @@ import java.util.Scanner;
 import com.group1.app.menu.enums.MenuNavigation;
 import com.group1.common.exception.NormalExitException;
 
-public class SimulationMenu implements Menu {
+public final class SimulationMenu implements Menu {
     private Scanner scan;
     private boolean runningState = true;
     private boolean optionState = true;
@@ -43,8 +43,7 @@ public class SimulationMenu implements Menu {
                         break;
 
                     case 3:
-                        System.out.println("Feature not ready yet!");
-                        optionState = false;
+                        menuList.get(MenuNavigation.NASABAH_MENU).execute();
                         break;
 
                     case 4:

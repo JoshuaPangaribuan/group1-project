@@ -3,14 +3,17 @@ package com.group1.app.menu;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.group1.app.entity.Nasabah;
 import com.group1.app.menu.enums.MenuNavigation;
+import com.group1.app.repository.Repository;
 import com.group1.common.exception.NormalExitException;
 
-public class NasabahMenu implements Menu {
+public final class NasabahMenu implements Menu {
     private Scanner scan;
     private boolean runningState = true;
     private boolean optionState = true;
     private Map<MenuNavigation, Menu> menuList;
+    private Repository nasabahRespository; 
 
     public NasabahMenu(Scanner s) {
         this.scan = s;
@@ -27,7 +30,7 @@ public class NasabahMenu implements Menu {
                 try {
                     switch (option) {
                         case 1:
-                            System.out.println("Feature Not Implemented Yet!");
+                            simulasiRegistrasiNasabah();
                             break;
 
                         case 2:
@@ -80,4 +83,28 @@ public class NasabahMenu implements Menu {
         System.out.print("Pilihan anda : ");
     }
 
+    private void simulasiRegistrasiNasabah() {
+        System.out.println("\nMenu Registrasi Nasabah!");
+
+        Nasabah nasabahBaru = new Nasabah();
+        System.out.print("Masukkan NIK : ");
+        nasabahBaru.setNIK(scan.nextLine());
+
+        System.out.print("Masukkan Nama : ");
+        nasabahBaru.setNama(scan.nextLine());
+
+        System.out.print("Masukkan Email : ");
+        nasabahBaru.setEmail(scan.nextLine());
+
+        System.out.print("Masukkan Password : ");
+        nasabahBaru.setPassword(scan.nextLine());
+
+        if (!nasabahRespository.saveDataNasabah(nasabahBaru)) {
+            System.out.println("Registrasi Gagal!");
+            return;
+        }
+
+        System.out.println("Registrasi Berhasil!");
+        System.out.println("Silahkan login dengan email dan password yang telah anda daftarkan!");
+    }
 }
