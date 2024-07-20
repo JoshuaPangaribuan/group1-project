@@ -29,17 +29,17 @@ public final class SimulationMenu implements Menu {
             display();
 
             while (optionState) {
-                Integer option = this.scan.nextInt();
+                Integer option = Integer.parseInt(this.scan.nextLine());
 
                 switch (option) {
                     case 1:
                         optionState = false;
-                        runningState = false;
                         menuList.get(MenuNavigation.NASABAH_MENU).execute();
+                        break;
 
                     case 2:
-                        System.out.println("Feature not ready yet!");
                         optionState = false;
+                        System.out.println("Feature not ready yet!");
                         break;
 
                     case 3:
@@ -72,7 +72,7 @@ public final class SimulationMenu implements Menu {
     }
 
     private void display() {
-        System.out.println("Selamat Datang di Simulasi Brank Aggregator!");
+        System.out.println("\nSelamat Datang di Simulasi Brank Aggregator!");
         System.out.println("Silahkan Pilih Menu : ");
         System.out.println("1. Simulasi Aktor Bank");
         System.out.println("2. Simulasi Admin Aplikasi");

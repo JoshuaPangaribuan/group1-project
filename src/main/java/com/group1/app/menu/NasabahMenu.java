@@ -1,5 +1,6 @@
 package com.group1.app.menu;
 
+import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -7,6 +8,7 @@ import com.group1.app.entity.Nasabah;
 import com.group1.app.menu.enums.MenuNavigation;
 import com.group1.app.repository.Repository;
 import com.group1.common.exception.NormalExitException;
+import com.group1.common.exception.RequiredDependencyException;
 
 public final class NasabahMenu implements Menu {
     private Scanner scan;
@@ -15,8 +17,13 @@ public final class NasabahMenu implements Menu {
     private Map<MenuNavigation, Menu> menuList;
     private Repository nasabahRespository; 
 
-    public NasabahMenu(Scanner s) {
+    public NasabahMenu(Scanner s, Repository repository) throws Exception {
+        if (s == null || repository == null) {
+            throw new RequiredDependencyException("Parameter tidak boleh null!");
+        }
+        
         this.scan = s;
+        this.nasabahRespository = repository;
     }
 
     @Override
@@ -25,12 +32,12 @@ public final class NasabahMenu implements Menu {
             display();
 
             while (optionState) {
-                Integer option = scan.nextInt();
-
                 try {
+                    Integer option = Integer.parseInt(this.scan.nextLine());
                     switch (option) {
                         case 1:
                             simulasiRegistrasiNasabah();
+                            optionState = false;
                             break;
 
                         case 2:
@@ -46,17 +53,20 @@ public final class NasabahMenu implements Menu {
                             break;
 
                         case 5:
-                            throw menuList.get(MenuNavigation.SIMULATION_MENU).execute();
+                            menuList.get(MenuNavigation.SIMULATION_MENU).execute();
 
                         default:
                             break;
                     }
+                }catch(InputMismatchException im){
+                    System.out.println("Input yang anda masukkan salah!");
+                    optionState = false;
                 } catch (Exception e) {
                     return e instanceof NormalExitException ? (NormalExitException) e : e;
-                }
-
-                if (!optionState) {
-                    break;
+                }finally{
+                    if (!optionState) {
+                        break;
+                    }
                 }
             }
 
@@ -84,7 +94,7 @@ public final class NasabahMenu implements Menu {
     }
 
     private void simulasiRegistrasiNasabah() {
-        System.out.println("\nMenu Registrasi Nasabah!");
+        System.out.print("\nMenu Registrasi Nasabah!\n");
 
         Nasabah nasabahBaru = new Nasabah();
         System.out.print("Masukkan NIK : ");

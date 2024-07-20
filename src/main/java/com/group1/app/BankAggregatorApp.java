@@ -16,6 +16,7 @@ import com.group1.app.menu.enums.MenuNavigation;
 import com.group1.app.repository.InMemoryRepository;
 import com.group1.app.repository.Repository;
 import com.group1.common.exception.NormalExitException;
+import com.group1.common.exception.RequiredDependencyException;
 
 public class BankAggregatorApp implements Application {
     private List<Closeable> closables = new ArrayList<>();
@@ -38,7 +39,7 @@ public class BankAggregatorApp implements Application {
                             registerClosable(repo);
 
                             SimulationMenu simulationMenu = new SimulationMenu(scan);
-                            NasabahMenu nasabahMenu = new NasabahMenu(scan);
+                            NasabahMenu nasabahMenu = new NasabahMenu(scan,repo);
                             BankMenu bankMenu = new BankMenu(scan);
 
                             Map<MenuNavigation, Menu> menuList = new HashMap<>();
@@ -51,6 +52,9 @@ public class BankAggregatorApp implements Application {
                             bankMenu.setMenuList(menuList);
 
                             throw simulationMenu.execute();
+                        }catch(RequiredDependencyException e){
+                            System.out.println(e.getMessage());
+                            return e;
                         } catch (Exception e) {
                             return e instanceof NormalExitException ? (NormalExitException) e : e;
                         }
