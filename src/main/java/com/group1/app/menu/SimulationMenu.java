@@ -39,10 +39,11 @@ public final class SimulationMenu implements Menu {
 
                     case 2:
                         optionState = false;
-                        System.out.println("Feature not ready yet!");
+                        menuList.get(MenuNavigation.APPLICATION_ADMIN_MENU).execute();
                         break;
 
                     case 3:
+                        optionState = false;
                         menuList.get(MenuNavigation.NASABAH_MENU).execute();
                         break;
 
@@ -65,6 +66,7 @@ public final class SimulationMenu implements Menu {
 
             if (!optionState && runningState) {
                 optionState = true;
+                continue;
             }
         }
 

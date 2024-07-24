@@ -7,6 +7,7 @@ import java.util.Scanner;
 import com.group1.app.entity.Nasabah;
 import com.group1.app.menu.enums.MenuNavigation;
 import com.group1.app.repository.Repository;
+import com.group1.common.exception.NoopException;
 import com.group1.common.exception.NormalExitException;
 import com.group1.common.exception.RequiredDependencyException;
 
@@ -15,13 +16,13 @@ public final class NasabahMenu implements Menu {
     private boolean runningState = true;
     private boolean optionState = true;
     private Map<MenuNavigation, Menu> menuList;
-    private Repository nasabahRespository; 
+    private Repository nasabahRespository;
 
     public NasabahMenu(Scanner s, Repository repository) throws Exception {
         if (s == null || repository == null) {
             throw new RequiredDependencyException("Parameter tidak boleh null!");
         }
-        
+
         this.scan = s;
         this.nasabahRespository = repository;
     }
@@ -36,8 +37,8 @@ public final class NasabahMenu implements Menu {
                     Integer option = Integer.parseInt(this.scan.nextLine());
                     switch (option) {
                         case 1:
-                            simulasiRegistrasiNasabah();
                             optionState = false;
+                            simulasiRegistrasiNasabah();
                             break;
 
                         case 2:
@@ -53,20 +54,20 @@ public final class NasabahMenu implements Menu {
                             break;
 
                         case 5:
-                            menuList.get(MenuNavigation.SIMULATION_MENU).execute();
+                            return new NoopException("no operation!");
 
                         default:
                             break;
                     }
-                }catch(InputMismatchException im){
+                } catch (InputMismatchException im) {
                     System.out.println("Input yang anda masukkan salah!");
                     optionState = false;
                 } catch (Exception e) {
                     return e instanceof NormalExitException ? (NormalExitException) e : e;
-                }finally{
-                    if (!optionState) {
-                        break;
-                    }
+                }
+
+                if (!optionState) {
+                    break;
                 }
             }
 

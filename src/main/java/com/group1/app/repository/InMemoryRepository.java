@@ -7,12 +7,17 @@ import java.util.List;
 
 import com.group1.app.entity.Nasabah;
 
-public class InMemoryRepository implements Repository, Closeable  {
+public class InMemoryRepository implements Repository, Closeable {
     private List<Nasabah> nasabahList = new ArrayList<>();
 
     @Override
     public boolean saveDataNasabah(Nasabah n) {
         return nasabahList.add(n);
+    }
+
+    @Override
+    public List<Nasabah> getAllDataNasabah() {
+        return this.nasabahList;
     }
 
     @Override
