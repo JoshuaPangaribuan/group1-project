@@ -4,8 +4,10 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.group1.app.entity.Account;
 import com.group1.app.entity.Nasabah;
-import com.group1.app.entity.enums.AccountStatus;
+import com.group1.app.entity.enums.AccountRoles;
+import com.group1.app.entity.enums.NasabahStatus;
 import com.group1.app.menu.enums.MenuNavigation;
 import com.group1.app.repository.Repository;
 import com.group1.common.exception.NoopException;
@@ -94,6 +96,7 @@ public final class NasabahMenu implements Menu {
         System.out.print("\nMenu Registrasi Nasabah!\n");
 
         Nasabah nasabahBaru = new Nasabah();
+        Account accountBaru = new Account();
         System.out.print("Masukkan NIK\t\t: ");
         nasabahBaru.setNIK(scan.nextLine());
 
@@ -101,12 +104,14 @@ public final class NasabahMenu implements Menu {
         nasabahBaru.setNama(scan.nextLine());
 
         System.out.print("Masukkan Email\t\t: ");
-        nasabahBaru.setEmail(scan.nextLine());
+        accountBaru.setEmail(scan.nextLine());
 
         System.out.print("Masukkan Password\t: ");
-        nasabahBaru.setPassword(scan.nextLine());
+        accountBaru.setPassword(scan.nextLine());
 
-        nasabahBaru.setAccountStatus(AccountStatus.PENDING_ACTIVE);
+        accountBaru.setRole(AccountRoles.NASABAH);
+        nasabahBaru.setAccount(accountBaru);
+        nasabahBaru.setAccountStatus(NasabahStatus.PENDING_ACTIVE);
 
         if (!nasabahRespository.saveDataNasabah(nasabahBaru)) {
             System.out.println("Registrasi Gagal!");

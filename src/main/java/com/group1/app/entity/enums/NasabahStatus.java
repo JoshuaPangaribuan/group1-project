@@ -1,6 +1,6 @@
 package com.group1.app.entity.enums;
 
-public enum AccountStatus {
+public enum NasabahStatus {
     UNKNOWN,
     ACTIVE,
     PENDING_ACTIVE,

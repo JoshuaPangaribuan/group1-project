@@ -5,11 +5,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.group1.app.entity.Account;
 import com.group1.app.entity.Nasabah;
-import com.group1.app.entity.enums.AccountStatus;
+import com.group1.app.entity.enums.AccountRoles;
+import com.group1.app.entity.enums.NasabahStatus;
 
 public class InMemoryRepository implements Repository, Closeable {
     private List<Nasabah> nasabahList = new ArrayList<>();
+    private List<Account> accountList = new ArrayList<>(
+            List.of(new Account("admin@admin.com", "admin", AccountRoles.ADMIN)));
 
     @Override
     public boolean saveDataNasabah(Nasabah n) {
@@ -31,7 +35,7 @@ public class InMemoryRepository implements Repository, Closeable {
     }
 
     @Override
-    public List<Nasabah> getDataNasabahByAccountStatus(AccountStatus status) {
+    public List<Nasabah> getDataNasabahByAccountStatus(NasabahStatus status) {
         return this.nasabahList.stream().filter(n -> n.getAccountStatus() == status).toList();
     }
 
@@ -39,7 +43,7 @@ public class InMemoryRepository implements Repository, Closeable {
     public boolean approveNasabahByNIK(String NIK) {
         Nasabah nasabah = this.nasabahList.stream().filter(n -> n.getNIK().equals(NIK)).findFirst().orElse(null);
         if (nasabah != null) {
-            nasabah.setAccountStatus(AccountStatus.ACTIVE);
+            nasabah.setAccountStatus(NasabahStatus.ACTIVE);
             return true;
         }
         return false;
@@ -47,9 +51,22 @@ public class InMemoryRepository implements Repository, Closeable {
 
     @Override
     public boolean approveAllPendingActiveNasabah() {
-        this.nasabahList.stream().filter(n -> n.getAccountStatus() == AccountStatus.PENDING_ACTIVE)
-                .forEach(n -> n.setAccountStatus(AccountStatus.ACTIVE));
+        this.nasabahList.stream().filter(n -> n.getAccountStatus() == NasabahStatus.PENDING_ACTIVE)
+                .forEach(n -> n.setAccountStatus(NasabahStatus.ACTIVE));
         return true;
+    }
+
+    @Override
+    public boolean validateAccount(Account account) {
+        Account accountExist = this.accountList.stream().filter(acc -> {
+            return acc.getEmail().equals(account.getEmail()) && acc.getRole() == account.getRole();
+        }).findFirst().orElse(null);
+
+        if (accountExist != null) {
+            return accountExist.getPassword().equals(account.getPassword());
+        } else {
+            return false;
+        }
     }
 
     @Override

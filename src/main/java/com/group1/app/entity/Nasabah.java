@@ -1,21 +1,13 @@
 package com.group1.app.entity;
 
-import com.group1.app.entity.enums.AccountStatus;
+import com.group1.app.entity.enums.NasabahStatus;
 
 public class Nasabah {
     private String NIK;
     private String Nama;
-    private String Email;
-    private String Password;
-    private AccountStatus AccountStatus;
+    private Account Account;
+    private NasabahStatus AccountStatus;
     // BANK ENTITY
-
-    public Nasabah(String NIK, String Nama, String Email, String Password) {
-        this.NIK = NIK;
-        this.Nama = Nama;
-        this.Email = Email;
-        this.Password = Password;
-    }
 
     public Nasabah() {
     }
@@ -36,28 +28,20 @@ public class Nasabah {
         Nama = nama;
     }
 
-    public String getEmail() {
-        return Email;
-    }
-
-    public void setEmail(String email) {
-        Email = email;
-    }
-
-    public String getPassword() {
-        return Password;
-    }
-
-    public void setPassword(String password) {
-        Password = password;
-    }
-
-    public AccountStatus getAccountStatus() {
+    public NasabahStatus getAccountStatus() {
         return AccountStatus;
     }
 
-    public void setAccountStatus(AccountStatus accountStatus) {
+    public void setAccountStatus(NasabahStatus accountStatus) {
         AccountStatus = accountStatus;
+    }
+
+    public Account getAccount() {
+        return Account;
+    }
+
+    public void setAccount(Account account) {
+        Account = account;
     }
 
 }

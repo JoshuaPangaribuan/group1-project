@@ -2,15 +2,15 @@ package com.group1.app.menu;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
 import com.github.freva.asciitable.HorizontalAlign;
+import com.group1.app.entity.Account;
 import com.group1.app.entity.Nasabah;
-import com.group1.app.entity.enums.AccountStatus;
-import com.group1.app.menu.enums.MenuNavigation;
+import com.group1.app.entity.enums.AccountRoles;
+import com.group1.app.entity.enums.NasabahStatus;
 import com.group1.app.repository.Repository;
 import com.group1.common.exception.NoopException;
 
@@ -28,6 +28,11 @@ final public class AdminMenu implements Menu {
 
     @Override
     public Exception execute() {
+        if (!loginEntry()) {
+            System.out.println("Login gagal! Silahkan coba lagi!");
+            return new NoopException("No operation!");
+        }
+
         while (runningState) {
             display();
 
@@ -42,7 +47,7 @@ final public class AdminMenu implements Menu {
 
                     case 2:
                         optionState = false;
-                        tampilkanDataNasabah(this.repository.getDataNasabahByAccountStatus(AccountStatus.ACTIVE));
+                        tampilkanDataNasabah(this.repository.getDataNasabahByAccountStatus(NasabahStatus.ACTIVE));
                         break;
 
                     case 3:
@@ -86,12 +91,26 @@ final public class AdminMenu implements Menu {
         System.out.print("Pilih Menu: ");
     }
 
+    private boolean loginEntry() {
+        Account accToValidate = new Account();
+
+        System.out.print("\nMasukkan Email\t: ");
+        accToValidate.setEmail(this.scan.nextLine());
+
+        System.out.print("Masukkan Password\t: ");
+        accToValidate.setPassword(this.scan.nextLine());
+
+        accToValidate.setRole(AccountRoles.ADMIN);
+
+        return this.repository.validateAccount(accToValidate);
+    }
+
     private void approveDataNasabahFlow() {
         boolean approveState = true;
 
         while (approveState) {
             boolean done = tampilkanDataNasabah(
-                    this.repository.getDataNasabahByAccountStatus(AccountStatus.PENDING_ACTIVE));
+                    this.repository.getDataNasabahByAccountStatus(NasabahStatus.PENDING_ACTIVE));
 
             if (!done)
                 return;
@@ -113,7 +132,7 @@ final public class AdminMenu implements Menu {
                 case 2:
                     approveNasabahByNIK();
                     List<Nasabah> remaining = this.repository
-                            .getDataNasabahByAccountStatus(AccountStatus.PENDING_ACTIVE);
+                            .getDataNasabahByAccountStatus(NasabahStatus.PENDING_ACTIVE);
                     if (remaining.isEmpty()) {
                         System.out.println("Tidak ada Nasabah Berstatus PENDING_ACTIVE yang tersisa!");
                         approveState = false;
@@ -167,10 +186,10 @@ final public class AdminMenu implements Menu {
                                 .dataAlign(HorizontalAlign.LEFT).with(nasabah -> nasabah.getNama()),
                         new Column().header("Email")
                                 .headerAlign(HorizontalAlign.CENTER)
-                                .dataAlign(HorizontalAlign.LEFT).with(nasabah -> nasabah.getEmail()),
+                                .dataAlign(HorizontalAlign.LEFT).with(nasabah -> nasabah.getAccount().getEmail()),
                         new Column().header("Password")
                                 .headerAlign(HorizontalAlign.CENTER)
-                                .dataAlign(HorizontalAlign.LEFT).with(nasabah -> nasabah.getPassword()),
+                                .dataAlign(HorizontalAlign.LEFT).with(nasabah -> nasabah.getAccount().getPassword()),
                         new Column().header("Status")
                                 .headerAlign(HorizontalAlign.CENTER)
                                 .dataAlign(HorizontalAlign.LEFT)
