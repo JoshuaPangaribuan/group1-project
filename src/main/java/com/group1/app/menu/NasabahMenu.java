@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import com.group1.app.entity.Nasabah;
+import com.group1.app.entity.enums.AccountStatus;
 import com.group1.app.menu.enums.MenuNavigation;
 import com.group1.app.repository.Repository;
 import com.group1.common.exception.NoopException;
@@ -15,7 +16,6 @@ public final class NasabahMenu implements Menu {
     private Scanner scan;
     private boolean runningState = true;
     private boolean optionState = true;
-    private Map<MenuNavigation, Menu> menuList;
     private Repository nasabahRespository;
 
     public NasabahMenu(Scanner s, Repository repository) throws Exception {
@@ -79,10 +79,6 @@ public final class NasabahMenu implements Menu {
         return new Exception("Unknown Error!");
     }
 
-    public void setMenuList(Map<MenuNavigation, Menu> menuList) {
-        this.menuList = menuList;
-    }
-
     private void display() {
         System.out.println("\nSelamat Datang di Simulasi Nasabah!");
         System.out.println("Silahkan pilih : ");
@@ -98,17 +94,19 @@ public final class NasabahMenu implements Menu {
         System.out.print("\nMenu Registrasi Nasabah!\n");
 
         Nasabah nasabahBaru = new Nasabah();
-        System.out.print("Masukkan NIK : ");
+        System.out.print("Masukkan NIK\t\t: ");
         nasabahBaru.setNIK(scan.nextLine());
 
-        System.out.print("Masukkan Nama : ");
+        System.out.print("Masukkan Nama\t\t: ");
         nasabahBaru.setNama(scan.nextLine());
 
-        System.out.print("Masukkan Email : ");
+        System.out.print("Masukkan Email\t\t: ");
         nasabahBaru.setEmail(scan.nextLine());
 
-        System.out.print("Masukkan Password : ");
+        System.out.print("Masukkan Password\t: ");
         nasabahBaru.setPassword(scan.nextLine());
+
+        nasabahBaru.setAccountStatus(AccountStatus.PENDING_ACTIVE);
 
         if (!nasabahRespository.saveDataNasabah(nasabahBaru)) {
             System.out.println("Registrasi Gagal!");

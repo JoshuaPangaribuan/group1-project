@@ -52,9 +52,6 @@ public class BankAggregatorApp implements Application {
                         menuList.put(MenuNavigation.APPLICATION_ADMIN_MENU, adminMenu);
 
                         simulationMenu.setMenuList(menuList);
-                        nasabahMenu.setMenuList(menuList);
-                        bankMenu.setMenuList(menuList);
-                        adminMenu.setMenuList(menuList);
 
                         throw simulationMenu.execute();
                     } catch (RequiredDependencyException e) {

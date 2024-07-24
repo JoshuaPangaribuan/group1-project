@@ -1,10 +1,13 @@
 package com.group1.app.entity;
 
+import com.group1.app.entity.enums.AccountStatus;
+
 public class Nasabah {
     private String NIK;
     private String Nama;
     private String Email;
     private String Password;
+    private AccountStatus AccountStatus;
     // BANK ENTITY
 
     public Nasabah(String NIK, String Nama, String Email, String Password) {
@@ -47,6 +50,14 @@ public class Nasabah {
 
     public void setPassword(String password) {
         Password = password;
+    }
+
+    public AccountStatus getAccountStatus() {
+        return AccountStatus;
+    }
+
+    public void setAccountStatus(AccountStatus accountStatus) {
+        AccountStatus = accountStatus;
     }
 
 }
