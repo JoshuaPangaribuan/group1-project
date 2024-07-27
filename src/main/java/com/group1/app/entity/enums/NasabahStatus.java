@@ -3,7 +3,7 @@ package com.group1.app.entity.enums;
 public enum NasabahStatus {
     UNKNOWN,
     ACTIVE,
-    PENDING_ACTIVE,
+    PENDING_ACTIVE, // State Awal
     INACTIVE;
 
     @Override

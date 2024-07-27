@@ -55,10 +55,6 @@ final public class AdminMenu implements Menu {
                         break;
 
                     case 4:
-                        // tampilkanDataRekening();
-                        break;
-
-                    case 5:
                         return new NoopException("no operation!");
 
                     default:
@@ -86,15 +82,14 @@ final public class AdminMenu implements Menu {
         System.out.println("1. Approve Data Nasabah");
         System.out.println("2. Tampilkan Nasabah Aktif");
         System.out.println("3. Lihat Data Transaksi");
-        System.out.println("4. Lihat Data Rekening");
-        System.out.println("5. Kembali ke menu sebelumnya");
+        System.out.println("4. Kembali ke menu sebelumnya");
         System.out.print("Pilih Menu: ");
     }
 
     private boolean loginEntry() {
         Account accToValidate = new Account();
 
-        System.out.print("\nMasukkan Email\t: ");
+        System.out.print("\nMasukkan Email\t\t: ");
         accToValidate.setEmail(this.scan.nextLine());
 
         System.out.print("Masukkan Password\t: ");
@@ -152,7 +147,7 @@ final public class AdminMenu implements Menu {
 
     private void approveAllPendingActiveNasabah() {
         this.repository.approveAllPendingActiveNasabah();
-        System.out.println("Semua Nasabah Berstatus PENDING_ACTIVE Berhasil Diapprove!");
+        System.out.println("\nSemua Nasabah Berstatus PENDING_ACTIVE Berhasil Diapprove!");
     }
 
     private void approveNasabahByNIK() {
