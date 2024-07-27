@@ -3,9 +3,12 @@ package com.group1.app.repository;
 import java.util.List;
 
 import com.group1.app.entity.Account;
+import com.group1.app.entity.Bank;
 import com.group1.app.entity.BankAccount;
 import com.group1.app.entity.Nasabah;
+import com.group1.app.entity.TransferHistory;
 import com.group1.app.entity.enums.NasabahStatus;
+import com.group1.app.entity.enums.TransferType;
 
 public interface Repository {
 
@@ -42,4 +45,15 @@ public interface Repository {
     boolean transferAmount(String toAccountNumber, String toAccountLabel, Double amount);
 
     BankAccount getBankAccount(String accountNumber, String bankLabel);
+
+    Bank getBankByEmail(String email);
+
+    // General History
+    boolean saveTransferHistory(List<TransferHistory> transferHistories);
+
+    List<TransferHistory> getTransferHistory();
+
+    List<TransferHistory> getTransferHistoryInByBankLabel(String bankLabel, TransferType type);
+
+    List<TransferHistory> getTransferHistoryOutByBankLabel(String bankLabel, TransferType type);
 }

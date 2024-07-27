@@ -1,10 +1,14 @@
 package com.group1.app.menu;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
+import com.github.freva.asciitable.HorizontalAlign;
 import com.group1.app.entity.Account;
 import com.group1.app.entity.BankAccount;
 import com.group1.app.entity.Nasabah;
@@ -60,7 +64,8 @@ public final class NasabahMenu implements Menu {
                             break;
 
                         case 3:
-                            System.out.println("Feature Not Implemented Yet!");
+                            optionState = false;
+                            checkHistoryTransaksi();
                             break;
 
                         case 4:
@@ -180,7 +185,7 @@ public final class NasabahMenu implements Menu {
         Nasabah n = this.nasabahRespository.getNasabah(email, password);
 
         if (n.getAccountStatus() != NasabahStatus.ACTIVE) {
-            System.out.println("Akun anda belum aktif!");
+            System.out.println("Akun anda belum aktif atau akun tidak terdaftar!");
             return null;
         }
 
@@ -269,6 +274,12 @@ public final class NasabahMenu implements Menu {
                 new TransferHistory(fromBankAccount.getAccountName(), fromBankLabel, toBankAccount.getAccountName(),
                         toBankLabel, nominal, TransferType.CASH_IN));
 
+        this.nasabahRespository.saveTransferHistory(List.of(
+                new TransferHistory(fromBankAccount.getAccountName(), fromBankLabel, toBankAccount.getAccountName(),
+                        toBankLabel, nominal, TransferType.CASH_OUT),
+                new TransferHistory(fromBankAccount.getAccountName(), fromBankLabel, toBankAccount.getAccountName(),
+                        toBankLabel, nominal, TransferType.CASH_IN)));
+
         System.out.println("\nTransfer Berhasil!");
     }
 
@@ -300,5 +311,68 @@ public final class NasabahMenu implements Menu {
 
         System.out.println("\nSaldo anda adalah : Rp. "
                 + nasabahRespository.getSaldo(isLoginValid.getBankAccounts().get(fromBankLabel), fromBankLabel));
+    }
+
+    private void checkHistoryTransaksi() {
+        Nasabah isLoginValid = loginChallenge();
+
+        if ((isLoginValid == null)) {
+            System.out.println("Email atau Password yang anda masukkan salah!");
+            return;
+        }
+
+        List<String> bankList = nasabahRespository.getAllRegisteredBankLabel();
+        System.out.println("Silahkan pilih bank anda : ");
+        for (String bank : isLoginValid.getBankAccounts().keySet()) {
+            System.out.println((bankList.indexOf(bank) + 1) + ". " + bank);
+        }
+
+        System.out.print("Pilihan Bank\t\t: ");
+        Integer fromBankOption = Integer.parseInt(scan.nextLine());
+        String fromBankLabel = bankList.get(fromBankOption - 1);
+
+        if (!nasabahRespository.inquiryBankAccount(isLoginValid.getBankAccounts().get(fromBankLabel),
+                fromBankLabel)) {
+            System.out.println("\nNomor Rekening tidak ditemukan!");
+            return;
+        }
+
+        BankAccount bankAccount = nasabahRespository.getBankAccount(isLoginValid.getBankAccounts().get(fromBankLabel),
+                fromBankLabel);
+
+        System.out.println("\nHistory Transaksi : ");
+        printHistoryTransaksi(bankAccount.getTransferHistories());
+    }
+
+    private void printHistoryTransaksi(List<TransferHistory> transferHistories) {
+        if (transferHistories.isEmpty()) {
+            System.out.println("Tidak ada history transaksi!");
+            return;
+        }
+
+        System.out.println();
+        System.out.println(AsciiTable.getTable(
+                transferHistories,
+                Arrays.asList(
+                        new Column().header("Dari")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT)
+                                .with(th -> th.getFromAccountName()),
+                        new Column().header("Bank Label")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT).with(th -> th.getFromBankLabel()),
+                        new Column().header("Ke")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT).with(th -> th.getToAccountName()),
+                        new Column().header("Bank Label")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT).with(th -> th.getToBankLabel()),
+                        new Column().header("Nominal")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT).with(th -> {
+                                    TransferType type = th.getTransferType();
+                                    return type == TransferType.CASH_IN ? "+ " + th.getAmount() : "- " + th.getAmount();
+                                }))));
+        System.out.println();
     }
 }

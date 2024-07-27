@@ -34,7 +34,7 @@ public final class SimulationMenu implements Menu {
                 switch (option) {
                     case 1:
                         optionState = false;
-                        menuList.get(MenuNavigation.NASABAH_MENU).execute();
+                        menuList.get(MenuNavigation.BANK_MENU).execute();
                         break;
 
                     case 2:

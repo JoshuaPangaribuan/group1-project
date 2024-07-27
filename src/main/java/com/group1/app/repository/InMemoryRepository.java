@@ -10,13 +10,16 @@ import com.group1.app.entity.Account;
 import com.group1.app.entity.Bank;
 import com.group1.app.entity.BankAccount;
 import com.group1.app.entity.Nasabah;
+import com.group1.app.entity.TransferHistory;
 import com.group1.app.entity.enums.AccountRoles;
 import com.group1.app.entity.enums.NasabahStatus;
+import com.group1.app.entity.enums.TransferType;
 
 public class InMemoryRepository implements Repository, Closeable {
     private List<Nasabah> nasabahList = new ArrayList<>();
     private List<Account> accountList = new ArrayList<>();
     private List<Bank> bankList = new ArrayList<>();
+    private List<TransferHistory> transferHistories = new ArrayList<>();
 
     public InMemoryRepository() {
         List<Account> list = List.of(
@@ -30,14 +33,14 @@ public class InMemoryRepository implements Repository, Closeable {
         this.accountList.addAll(list);
 
         List<Bank> bList = List.of(
-                new Bank("Bank Rakyat Indonesia", "BRI", List.of(
+                new Bank("bri-admin@bri.com","Bank Rakyat Indonesia", "BRI", List.of(
                         new BankAccount("338822957", "Joshua Ryandafres Pangaribuan", "250401", "11319029",
                                 1_500_000.00, 50_000.00),
                         new BankAccount("338822861", "Seseorang", "250402", "11319030", 2_500_000.00, 50_000.00))),
-                new Bank("Bank Mandiri", "MANDIRI", List.of(
+                new Bank("mandiri-admin@mandiri.com","Bank Mandiri", "MANDIRI", List.of(
                         new BankAccount("448822957", "Joshua Ryandafres Pangaribuan", "250401", "11319029",
                                 3_500_000.00, 50_000.00))),
-                new Bank("Bank Negara Indonesia", "BNI", List.of(
+                new Bank("bni-admin@bni.com","Bank Negara Indonesia", "BNI", List.of(
                         new BankAccount("558822957", "Indra", "889922", "11319031",
                                 4_500_000.00, 50_000.00))));
 
@@ -211,6 +214,31 @@ public class InMemoryRepository implements Repository, Closeable {
                     .orElse(null);
         }
         return null;
+    }
+
+    @Override
+    public Bank getBankByEmail(String email) {
+        return this.bankList.stream().filter(b -> b.getEmail().equals(email)).findFirst().orElse(null);
+    }
+
+    @Override
+    public boolean saveTransferHistory(List<TransferHistory> transferHistories) {
+        return this.transferHistories.addAll(transferHistories);
+    }
+
+    @Override
+    public List<TransferHistory> getTransferHistory() {
+        return this.transferHistories;
+    }
+
+    @Override
+    public List<TransferHistory> getTransferHistoryInByBankLabel(String bankLabel, TransferType type) {
+        return this.transferHistories.stream().filter(th -> th.getToBankLabel().equals(bankLabel) && th.getTransferType().equals(type)).toList();
+    }
+
+    @Override
+    public List<TransferHistory> getTransferHistoryOutByBankLabel(String bankLabel, TransferType type) {
+        return this.transferHistories.stream().filter(th -> th.getFromBankLabel().equals(bankLabel) && th.getTransferType().equals(type)).toList();
     }
 
     @Override

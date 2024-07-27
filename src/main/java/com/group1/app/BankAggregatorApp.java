@@ -42,7 +42,7 @@ public class BankAggregatorApp implements Application {
 
                         SimulationMenu simulationMenu = new SimulationMenu(scan);
                         NasabahMenu nasabahMenu = new NasabahMenu(scan, repo);
-                        BankMenu bankMenu = new BankMenu(scan);
+                        BankMenu bankMenu = new BankMenu(scan,repo);
                         AdminMenu adminMenu = new AdminMenu(scan, repo);
 
                         Map<MenuNavigation, Menu> menuList = new HashMap<>();

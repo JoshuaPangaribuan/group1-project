@@ -11,6 +11,7 @@ import com.group1.app.entity.Account;
 import com.group1.app.entity.Nasabah;
 import com.group1.app.entity.enums.AccountRoles;
 import com.group1.app.entity.enums.NasabahStatus;
+import com.group1.app.entity.enums.TransferType;
 import com.group1.app.repository.Repository;
 import com.group1.common.exception.NoopException;
 
@@ -51,7 +52,8 @@ final public class AdminMenu implements Menu {
                         break;
 
                     case 3:
-                        // tampilkanDataTransaksi();
+                        optionState = false;
+                        tampilkanDataTransaksi();
                         break;
 
                     case 4:
@@ -191,5 +193,35 @@ final public class AdminMenu implements Menu {
                                 .with(nasabah -> nasabah.getAccountStatus().toString()))));
         System.out.println();
         return true;
+    }
+
+    private void tampilkanDataTransaksi() {
+        System.out.println();
+        System.out.println(AsciiTable.getTable(
+                this.repository.getTransferHistory(),
+                Arrays.asList(
+                        new Column().header("Dari")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT)
+                                .with(th -> th.getFromAccountName()),
+                        new Column().header("Bank Label")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT).with(th -> th.getFromBankLabel()),
+                        new Column().header("Ke")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT).with(th -> th.getToAccountName()),
+                        new Column().header("Bank Label")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT).with(th -> th.getToBankLabel()),
+                        new Column().header("Tipe Transaksi")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT).with(th -> th.getTransferType().toString()),
+                        new Column().header("Nominal")
+                                .headerAlign(HorizontalAlign.CENTER)
+                                .dataAlign(HorizontalAlign.LEFT).with(th -> {
+                                    TransferType type = th.getTransferType();
+                                    return type == TransferType.CASH_IN ? "+ " + th.getAmount() : "- " + th.getAmount();
+                                }))));
+        System.out.println();
     }
 }
