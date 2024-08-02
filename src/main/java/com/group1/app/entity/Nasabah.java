@@ -1,5 +1,6 @@
 package com.group1.app.entity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.group1.app.entity.enums.NasabahStatus;
@@ -20,7 +21,9 @@ public class Nasabah {
         this.Nama = nama;
         this.Account = account;
         this.AccountStatus = accountStatus;
-        this.bankAccounts = bankAccounts;
+        this.bankAccounts = new HashMap<>();
+
+        this.bankAccounts.putAll(bankAccounts);
     }
 
     public String getNIK() {

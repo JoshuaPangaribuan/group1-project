@@ -29,6 +29,8 @@ public interface Repository {
 
     Nasabah getNasabah(String email, String password);
 
+    boolean updateDataNasabah(Nasabah nasabah);
+
     // BANK
     List<String> getAllRegisteredBankLabel();
 

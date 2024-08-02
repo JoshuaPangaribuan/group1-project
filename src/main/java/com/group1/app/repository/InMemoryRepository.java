@@ -42,7 +42,8 @@ public class InMemoryRepository implements Repository, Closeable {
                                 3_500_000.00, 50_000.00))),
                 new Bank("bni-admin@bni.com","Bank Negara Indonesia", "BNI", List.of(
                         new BankAccount("558822957", "Indra", "889922", "11319031",
-                                4_500_000.00, 50_000.00))));
+                                4_500_000.00, 50_000.00),
+                        new BankAccount("558822958", "Joshua Ryandafres Pangaribuan", "250401", "11319029", 7_500_000.00, 50_000.00))));
 
         this.bankList.addAll(bList);
 
@@ -119,6 +120,18 @@ public class InMemoryRepository implements Repository, Closeable {
         Nasabah nasabah = this.nasabahList.stream().filter(n -> n.getAccount().getEmail().equals(account.getEmail()))
                 .findFirst().orElse(null);
         return nasabah;
+    }
+
+    @Override
+    public boolean updateDataNasabah(Nasabah nasabah) {
+        Nasabah nasabahExist = this.nasabahList.stream().filter(n -> n.getNIK().equals(nasabah.getNIK())).findFirst()
+                .orElse(null);
+        if (nasabahExist != null) {
+            this.nasabahList.remove(nasabahExist);
+            this.nasabahList.add(nasabah);
+            return true;
+        }
+        return false;
     }
 
     @Override

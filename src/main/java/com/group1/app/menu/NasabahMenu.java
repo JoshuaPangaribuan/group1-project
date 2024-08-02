@@ -1,6 +1,7 @@
 package com.group1.app.menu;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,8 @@ public final class NasabahMenu implements Menu {
                             break;
 
                         case 4:
-                            System.out.println("Feature Not Implemented Yet!");
+                            optionState = false;
+                            tambahRekeningBank();
                             break;
 
                         case 5:
@@ -290,17 +292,19 @@ public final class NasabahMenu implements Menu {
             return;
         }
 
-        // PERBAIKI
-        // FOREACH PAKE MAP AJA
         List<String> bankList = nasabahRespository.getAllRegisteredBankLabel();
+        Map<Integer, String> bankAccounts = new HashMap<>();
+        int counter = 1;
         System.out.println("\nSilahkan pilih bank anda : ");
         for (String bank : isLoginValid.getBankAccounts().keySet()) {
-            System.out.println((bankList.indexOf(bank) + 1) + ". " + bank);
+            System.out.println(counter + ". " + bank);
+            bankAccounts.put(counter, bank);
+            counter++;
         }
 
         System.out.print("Pilihan Bank\t\t: ");
         Integer fromBankOption = Integer.parseInt(scan.nextLine());
-        String fromBankLabel = bankList.get(fromBankOption - 1);
+        String fromBankLabel = bankList.get(bankList.indexOf(bankAccounts.get(fromBankOption)));
 
         if (!nasabahRespository.inquiryBankAccount(isLoginValid.getBankAccounts().get(fromBankLabel),
                 fromBankLabel)) {
@@ -341,6 +345,42 @@ public final class NasabahMenu implements Menu {
 
         System.out.println("\nHistory Transaksi : ");
         printHistoryTransaksi(bankAccount.getTransferHistories());
+    }
+
+    private void tambahRekeningBank() {
+        Nasabah isLoginValid = loginChallenge();
+
+        if ((isLoginValid == null)) {
+            System.out.println("\nEmail atau Password yang anda masukkan salah!");
+            return;
+        }
+
+        System.out.println("\nSilahkan pilih bank yang akan anda daftarkan : ");
+        List<String> bankList = nasabahRespository.getAllRegisteredBankLabel();
+
+        for (String bank : bankList) {
+            System.out.println((bankList.indexOf(bank) + 1) + ". " + bank);
+        }
+
+        System.out.print("Pilihan Bank\t\t: ");
+        Integer bankOption = Integer.parseInt(scan.nextLine());
+        String bankLabel = bankList.get(bankOption - 1);
+
+        System.out.print("Masukkan Nomor Rekening\t: ");
+        String accountNumber = scan.nextLine();
+        if (!nasabahRespository.inquiryBankAccount(accountNumber, isLoginValid.getNIK(), bankLabel)) {
+            System.out.println("Nomor Rekening tidak ditemukan!");
+            return;
+        }
+
+        isLoginValid.getBankAccounts().put(bankLabel, accountNumber);
+
+        if (!nasabahRespository.updateDataNasabah(isLoginValid)) {
+            System.out.println("Gagal menambahkan rekening bank!");
+            return;
+        }
+
+        System.out.println("Rekening Bank berhasil ditambahkan!");
     }
 
     private void printHistoryTransaksi(List<TransferHistory> transferHistories) {
