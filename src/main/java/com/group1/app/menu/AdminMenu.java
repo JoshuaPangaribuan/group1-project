@@ -9,6 +9,7 @@ import com.github.freva.asciitable.Column;
 import com.github.freva.asciitable.HorizontalAlign;
 import com.group1.app.entity.Account;
 import com.group1.app.entity.Nasabah;
+import com.group1.app.entity.TransferHistory;
 import com.group1.app.entity.enums.AccountRoles;
 import com.group1.app.entity.enums.NasabahStatus;
 import com.group1.app.entity.enums.TransferType;
@@ -166,7 +167,7 @@ final public class AdminMenu implements Menu {
 
     private boolean tampilkanDataNasabah(List<Nasabah> nasabahList) {
         if (nasabahList.isEmpty()) {
-            System.out.println("Tidak ada data nasabah yang bisa diapprove!");
+            System.out.println("\nTidak ada data nasabah yang bisa diapprove!");
             return false;
         }
 
@@ -196,9 +197,16 @@ final public class AdminMenu implements Menu {
     }
 
     private void tampilkanDataTransaksi() {
+        List<TransferHistory> transferHistories = this.repository.getTransferHistory();
+
+        if (transferHistories.isEmpty()) {
+            System.out.println("\nTidak ada data transaksi!");
+            return;
+        }
+        
         System.out.println();
         System.out.println(AsciiTable.getTable(
-                this.repository.getTransferHistory(),
+                transferHistories,
                 Arrays.asList(
                         new Column().header("Dari")
                                 .headerAlign(HorizontalAlign.CENTER)

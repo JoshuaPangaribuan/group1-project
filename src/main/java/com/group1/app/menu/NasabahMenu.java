@@ -72,12 +72,12 @@ public final class NasabahMenu implements Menu {
                             System.out.println("Feature Not Implemented Yet!");
                             break;
 
-                        case 6:
+                        case 5:
                             optionState = false;
                             checkSaldo();
                             break;
 
-                        case 7:
+                        case 6:
                             return new NoopException("no operation!");
 
                         default:
@@ -110,9 +110,8 @@ public final class NasabahMenu implements Menu {
         System.out.println("2. Simulasi Transfer");
         System.out.println("3. Simulasi Cek History Transaksi");
         System.out.println("4. Tambah Rekening Bank");
-        System.out.println("5. Close Account");
-        System.out.println("6. Cek Saldo");
-        System.out.println("7. Kembali Ke Menu Awal");
+        System.out.println("5. Cek Saldo");
+        System.out.println("6. Kembali Ke Menu Awal");
         System.out.print("Pilihan anda : ");
     }
 
@@ -294,7 +293,7 @@ public final class NasabahMenu implements Menu {
         // PERBAIKI
         // FOREACH PAKE MAP AJA
         List<String> bankList = nasabahRespository.getAllRegisteredBankLabel();
-        System.out.println("Silahkan pilih bank anda : ");
+        System.out.println("\nSilahkan pilih bank anda : ");
         for (String bank : isLoginValid.getBankAccounts().keySet()) {
             System.out.println((bankList.indexOf(bank) + 1) + ". " + bank);
         }

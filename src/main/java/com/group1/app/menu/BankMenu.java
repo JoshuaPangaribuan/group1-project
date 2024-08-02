@@ -3,7 +3,6 @@ package com.group1.app.menu;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import com.github.freva.asciitable.AsciiTable;
@@ -52,7 +51,7 @@ public final class BankMenu implements Menu {
                             checkRiwayatTransaksi();
                             break;
 
-                        case 4:
+                        case 3:
                             return new NoopException("no operation!");
 
                         default:
@@ -82,13 +81,12 @@ public final class BankMenu implements Menu {
         System.out.println("Silahkan pilih simulasi : ");
         System.out.println("1. Cetak Detail Nasabah");
         System.out.println("2. Cek Riwayat Transaksi");
-        System.out.println("3. Cek Daftar Akun Bank");
-        System.out.println("4. Kembali Ke Menu Awal");
+        System.out.println("3. Kembali Ke Menu Awal");
         System.out.print("Pilihan anda : ");
     }
 
     private Bank loginChallenge() {
-        System.out.print("Masukkan Email Bank\t: ");
+        System.out.print("\nMasukkan Email Bank\t: ");
         String email = this.scan.nextLine();
 
         System.out.print("Masukkan Password\t: ");
